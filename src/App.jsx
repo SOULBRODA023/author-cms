@@ -13,7 +13,9 @@ function App() {
 		// Simulate a backend/auth check
 		const checkBackend = async () => {
 			try {
-				const res = await fetch("https://your-app.onrender.com/health");  
+				const res = await fetch(
+					"https://anime-blog-production-cfed.up.railway.app/health"
+				);  
 				if (!res.ok) throw new Error("Backend not ready");
 			} catch (err) {
 				console.log("Backend still starting:", err.message);
