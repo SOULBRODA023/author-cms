@@ -26,7 +26,7 @@ const PostForm = ({ mode = "create" }) => {
 			const fetchPost = async () => {
 				const token = localStorage.getItem("token");
 				const res = await fetch(
-					`http://localhost:4000/api/posts/${id}`,
+					`https://anime-blog-production-cfed.up.railway.app/api/posts/${id}`,
 					{
 						headers: { Authorization: `Bearer ${token}` },
 					}
@@ -77,8 +77,8 @@ const PostForm = ({ mode = "create" }) => {
 		try {
 			const url =
 				mode === "edit"
-					? `http://localhost:4000/api/posts/${id}`
-					: "http://localhost:4000/api/posts";
+					? `https://anime-blog-production-cfed.up.railway.app/api/posts/${id}`
+					: "https://anime-blog-production-cfed.up.railway.app/api/posts";
 
 			const method = mode === "edit" ? "PUT" : "POST";
 
