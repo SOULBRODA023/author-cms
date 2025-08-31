@@ -13,7 +13,7 @@ export default function PostDetail() {
 		const fetchPost = async () => {
 			try {
 				const res = await fetch(
-					`https://anime-blog-production-cfed.up.railway.app/api/posts/${id}`
+					`https://anime-blog-7oi4.onrender.com/api/posts/${id}`
 				);
 				const data = await res.json();
 				setPost(data);
@@ -22,7 +22,7 @@ export default function PostDetail() {
 				if (data.author) {
 					try {
 						const authorRes = await fetch(
-							`https://anime-blog-production-cfed.up.railway.app/api/users/${data.author}`
+							`https://anime-blog-7oi4.onrender.com/api/users/${data.author}`
 						);
 						if (authorRes.ok) {
 							const authorData = await authorRes.json();

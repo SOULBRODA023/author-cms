@@ -25,7 +25,7 @@ const Login = () => {
 
 		try {
 			const response = await fetch(
-				`https://anime-blog-production-cfed.up.railway.app/api${endpoint}`,
+				`https://anime-blog-7oi4.onrender.com/api${endpoint}`,
 				{
 					method: "POST",
 					headers: { "Content-Type": "application/json" },

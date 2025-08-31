@@ -12,7 +12,7 @@ const Dashboard = () => {
 	useEffect(() => {
 		const fetchPosts = async () => {
 			try {
-				const res = await fetch("https://anime-blog-production-cfed.up.railway.app/api/posts");
+				const res = await fetch("https://anime-blog-7oi4.onrender.com/api/posts");
 				const data = await res.json();
 				setPosts(data);
 				console.log(data);
@@ -38,7 +38,7 @@ const Dashboard = () => {
 	};
 
 	const handleDelete = async (id) => {
-		const res = await fetch(`https://anime-blog-production-cfed.up.railway.app/api/posts/${id}`, {
+		const res = await fetch(`https://anime-blog-7oi4.onrender.com/api/posts/${id}`, {
 			method: "DELETE",
 		});
 

@@ -14,7 +14,7 @@ function App() {
 		const checkBackend = async () => {
 			try {
 				const res = await fetch(
-					"https://anime-blog-production-cfed.up.railway.app/health"
+					"https://anime-blog-7oi4.onrender.com/health"
 				);  
 				if (!res.ok) throw new Error("Backend not ready");
 			} catch (err) {
