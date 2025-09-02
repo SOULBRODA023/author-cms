@@ -6,18 +6,30 @@ const Dashboard = () => {
 	const navigate = useNavigate();
 	const [menuOpen, setMenuOpen] = useState(false);
 
-	const [posts, setPosts] = useState([]);
+	const [posts, setPosts] = useState([]); // ✅ start with empty array
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchPosts = async () => {
 			try {
-				const res = await fetch("https://anime-blog-7oi4.onrender.com/api/posts");
+				const res = await fetch(
+					"https://anime-blog-7oi4.onrender.com/api/posts"
+				);
 				const data = await res.json();
-				setPosts(data);
-				console.log(data);
+				console.log("API response:", data);
+
+				// ✅ Handle both array or wrapped object
+				if (Array.isArray(data)) {
+					setPosts(data);
+				} else if (Array.isArray(data.posts)) {
+					setPosts(data.posts);
+				} else {
+					console.warn("Unexpected response:", data);
+					setPosts([]); // fallback to empty array
+				}
 			} catch (err) {
 				console.error("Error fetching posts:", err);
+				setPosts([]); // avoid map error on crash
 			} finally {
 				setLoading(false);
 			}
@@ -38,12 +50,15 @@ const Dashboard = () => {
 	};
 
 	const handleDelete = async (id) => {
-		const res = await fetch(`https://anime-blog-7oi4.onrender.com/api/posts/${id}`, {
-			method: "DELETE",
-		});
+		const res = await fetch(
+			`https://anime-blog-7oi4.onrender.com/api/posts/${id}`,
+			{
+				method: "DELETE",
+			}
+		);
 
 		if (res.ok) {
-			setPosts(posts.filter((p) => p.id !== id));
+			setPosts((prev) => prev.filter((p) => p.id !== id));
 		}
 	};
 
@@ -104,66 +119,74 @@ const Dashboard = () => {
 
 				{/* Post Card */}
 				<div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-					{posts.map((post) => (
-						<div
-							key={post.id}
-							className="bg-white shadow-md rounded-2xl p-4 max-w-md"
-						>
-							{/* Status + Date */}
-							<div className="flex justify-between items-center">
-								<span
-									className={`${
-										post.status === "PUBLISHED"
-											? "bg-green-200 text-green-700"
-											: "bg-yellow-200 text-yellow-700"
-									} text-xs px-3 py-1 rounded-full`}
-								>
-									{post.status}
-								</span>
-								<span className="text-gray-400 text-sm">
-									{new Date(
-										post.createdAt
-									).toLocaleDateString()}
-								</span>
-							</div>
-
-							{/* Title */}
-							<h3 className="font-bold text-lg mt-2">
-								{post.title}
-							</h3>
-
-							{/* Content preview */}
-							<p className="text-gray-600 text-sm mt-1">
-								{post.content.length > 120
-									? post.content.substring(0, 120) + "..."
-									: post.content}
-							</p>
-
-							{/* Buttons */}
-							<div className="flex gap-3">
-								<button
-									className="mt-4 bg-green-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
-									onClick={() => handleEdit(post.id)}
-								>
-									Edit
-								</button>
-
-								<button
-									className="mt-4 bg-red-400 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
-									onClick={() => handleDelete(post.id)}
-								>
-									Delete
-								</button>
-							</div>
-
-							<button
-								onClick={() => navigate(`/posts/${post.id}`)}
-								className="mt-4 bg-gradient-to-r from-purple-600 via-pink-600 to-red-400 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
+					{Array.isArray(posts) && posts.length > 0 ? (
+						posts.map((post) => (
+							<div
+								key={post.id}
+								className="bg-white shadow-md rounded-2xl p-4 max-w-md"
 							>
-								Open
-							</button>
-						</div>
-					))}
+								{/* Status + Date */}
+								<div className="flex justify-between items-center">
+									<span
+										className={`${
+											post.status === "PUBLISHED"
+												? "bg-green-200 text-green-700"
+												: "bg-yellow-200 text-yellow-700"
+										} text-xs px-3 py-1 rounded-full`}
+									>
+										{post.status}
+									</span>
+									<span className="text-gray-400 text-sm">
+										{post.createdAt
+											? new Date(
+													post.createdAt
+											  ).toLocaleDateString()
+											: "N/A"}
+									</span>
+								</div>
+
+								{/* Title */}
+								<h3 className="font-bold text-lg mt-2">
+									{post.title}
+								</h3>
+
+								{/* Content preview */}
+								<p className="text-gray-600 text-sm mt-1">
+									{post.content?.length > 120
+										? post.content.substring(0, 120) + "..."
+										: post.content}
+								</p>
+
+								{/* Buttons */}
+								<div className="flex gap-3">
+									<button
+										className="mt-4 bg-green-600 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
+										onClick={() => handleEdit(post.id)}
+									>
+										Edit
+									</button>
+
+									<button
+										className="mt-4 bg-red-400 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
+										onClick={() => handleDelete(post.id)}
+									>
+										Delete
+									</button>
+								</div>
+
+								<button
+									onClick={() =>
+										navigate(`/posts/${post.id}`)
+									}
+									className="mt-4 bg-gradient-to-r from-purple-600 via-pink-600 to-red-400 hover:bg-purple-700 text-white font-bold px-4 py-2 rounded-xl w-full"
+								>
+									Open
+								</button>
+							</div>
+						))
+					) : (
+						<p className="text-white">No posts found.</p>
+					)}
 				</div>
 			</main>
 		</div>
